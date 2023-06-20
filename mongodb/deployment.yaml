@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+  namespace: microservices-workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: mongo-init
+      volumes:
+        - name: mongo-init
+          configMap:
+            name: mongo-init
+            items:
+              - key: mongo-init.js
+                path: mongo-init.js

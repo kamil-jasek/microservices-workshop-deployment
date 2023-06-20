@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-frontend
+  labels:
+    app: orders-frontend
+  namespace: microservices-workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-frontend
+  template:
+    metadata:
+      labels:
+        app: orders-frontend
+    spec:
+      containers:
+        - name: orders-frontend
+          imagePullPolicy: Always
+          image: localhost:5000/orders-frontend:latest
+          ports:
+            - containerPort: 80
