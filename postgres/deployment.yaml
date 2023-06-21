@@ -14,7 +14,10 @@ spec:
     metadata:
       labels:
         app: postgres
+      annotations:
+        linkerd.io/inject: enabled
     spec:
+      serviceAccountName: postgres
       containers:
         - name: postgres
           image: postgres

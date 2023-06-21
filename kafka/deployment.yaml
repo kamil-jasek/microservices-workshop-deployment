@@ -1,3 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kafka-broker
+  namespace: microservices-workshop
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +20,8 @@ spec:
     metadata:
       labels:
         app: kafka-broker
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
         - name: kafka-broker
@@ -35,7 +43,14 @@ spec:
               value: '1'
             - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
               value: '1'
+      serviceAccountName: kafka-broker
 
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zookeeper
+  namespace: microservices-workshop
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -53,6 +68,8 @@ spec:
     metadata:
       labels:
         app: zookeeper
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
         - name: zookeeper
@@ -64,6 +81,13 @@ spec:
               value: '2181'
             - name: ZOOKEEPER_TICK_TIME
               value: '2000'
+      serviceAccountName: zookeeper
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: schemaregistry
+  namespace: microservices-workshop
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -81,6 +105,8 @@ spec:
     metadata:
       labels:
         app: schemaregistry
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
         - name: schemaregistry
@@ -100,6 +126,13 @@ spec:
               value: INFO
             - name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC
               value: _schemas
+      serviceAccountName: schemaregistry
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kafka-ui
+  namespace: microservices-workshop
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -117,6 +150,8 @@ spec:
     metadata:
       labels:
         app: kafka-ui
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
         - name: kafka-ui
@@ -128,3 +163,4 @@ spec:
               value: kubernetes
             - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
               value: kafka-broker:29092
+      serviceAccountName: kafka-ui
