@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana
+  namespace: microservices-workshop
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        # Access mode - proxy (server in the UI) or direct (browser in the UI).
+        access: proxy
+        url: http://prometheus
+        jsonData:
+          httpMethod: POST
+          manageAlerts: true
+          prometheusType: Prometheus
+          prometheusVersion: 2.44.0
+          incrementalQuerying: true
+          incrementalQueryOverlapWindow: 10m
+          cacheLevel: 'High'
