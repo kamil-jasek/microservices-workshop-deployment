@@ -1,4 +1,5 @@
 #!/bin/sh
+kubectl create namespace microservices-workshop
 kubectl apply \
   -f postgres/service-account.yaml \
   -f postgres/deployment.yaml \
