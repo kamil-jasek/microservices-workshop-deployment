@@ -1,51 +1,48 @@
-# Workshop preparation
+# Workshop Preparation
 
-## 1. Clone next repositories:
-1. [Orders microservice](https://github.com/kamil-jasek/microservices-workshop-orders)
-2. [Warehouse microservice](https://github.com/kamil-jasek/microservices-workshop-warehouse)
-3. [Customers microservice](https://github.com/kamil-jasek/microservices-workshop-customers)
-4. [Order process manager microservice](https://github.com/kamil-jasek/microservices-workshop-order-process-manager)
-5. [Orders Fronted microservice](https://github.com/kamil-jasek/microservices-workshop-orders-fronted)
+## 1. Clone Repositories
+1. [Orders Microservice](https://github.com/kamil-jasek/microservices-workshop-orders)
+2. [Warehouse Microservice](https://github.com/kamil-jasek/microservices-workshop-warehouse)
+3. [Customers Microservice](https://github.com/kamil-jasek/microservices-workshop-customers)
+4. [Order Process Manager Microservice](https://github.com/kamil-jasek/microservices-workshop-order-process-manager)
+5. [Orders Frontend Microservice](https://github.com/kamil-jasek/microservices-workshop-orders-fronted)
 
-## 2. Import them as existing modules into one project:
-`File -> New -> Module from existing sources`
+## 2. Import All Projects into IntelliJ IDEA
+There are two options to import projects:
+1. You can import them as separate projects by using: `File -> New -> Project from Existing Sources`.
+2. Or you can import them as modules: `File -> New -> Module from Existing Sources`.
 
-## 3. Go to orders microservice directory and run: 
-`docker-compose up -d`
+Backend microservices require Java 17. Install it with this [instruction](https://www.jetbrains.com/help/idea/sdk.html).
 
-It will start containers like postgres, kafka and wiremock required to run locally orders microservice.
+## 3. Start Supporting Docker Services
+1. Go to the `orders` project and execute: `docker-compose up -d`. This will start containers like PostgreSQL, Kafka, and Wiremock, which are required to run the orders microservice locally.
+2. Go to the `customers` project and run: `docker-compose up -d`. This will start the MongoDB container required to run the customers microservice locally.
 
-## 4. Go to customers microservice directory and run:
-`docker-compose up -d`
+## 5. Run Microservices with 'local' Profile from IntelliJ IDEA
 
-It will start mongodb container required to run locally customers microservice.
+1. Go to the `order` project and find the class: `OrdersApplication`, then right-click on the class file name and select `More Run/Debug -> Modify Run Configuration`. If you are using IntelliJ Community Edition, then add the environment variable: `SPRING_PROFILES_ACTIVE=local`. If you are using Ultimate Edition, then add `local` to `Active Profiles`.
+2. Repeat the above steps for the `customers` and `warehouse` microservices.
 
-## 5. Run from Intellij next microservices for Saga pattern:
-1. Orders microservice with Spring profile: local
-2. Customer microservice with Spring profile: local
-3. Warehouse microservice with Spring profile: local
+## 6. Install Quasar and Run Frontend App
+Learn how to install Quasar [here](https://quasar.dev/start/quasar-cli#tl-dr).<br>
+Start the frontend with the command: `quasar dev`
 
-## 6. Install Quasar and run frontend app
-How to install Quasar: [see here](https://quasar.dev/start/quasar-cli#tl-dr).<br>
-Start frontend with command: `quasar dev`
-
-
-## 7. Install and prepare minikube
+## 7. Install and Prepare Minikube
 1. [Installation](https://minikube.sigs.k8s.io/docs/start/)
-2. For locally build docker images with microservices we need private registry in minikube. See [here](https://minikube.sigs.k8s.io/docs/handbook/registry/) how to install it.
+2. For locally built Docker images with microservices, we need a private registry in Minikube. See [here](https://minikube.sigs.k8s.io/docs/handbook/registry/) for instructions on how to install it.
 3. Commands:
-   1. `minikube start` - start kubernetes node
-   2. `minikube dashboard` - start kubernetes dashboard in the browser
-   3. `minikube tunnel` - open ingress to localhost
-   4. `docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"` - redirect docker ports to minikube, it enables possibility for pushing images to minikube private registry.
+   1. `minikube start` - start the Kubernetes node.
+   2. `minikube dashboard` - start the Kubernetes dashboard in the browser.
+   3. `minikube tunnel` - open ingress to localhost.
+   4. `docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"` - redirect Docker ports to Minikube, enabling the possibility of pushing images to the Minikube private registry.
 
-## 8. Deploy microservices workshop to minikube
-1. Go to deployments project and execute: `./deploy-all.sh`. It will install postrges, mongo, kafka, grafana, prometheus etc... everything what is needed before we deploy every microservice.
-2. Go to every microservice directory and execute: `./deploy.sh` **WARNING** it's tested only on macOS, maybe you will need small adjustment for your OS. Check next point for deploying frontend.
-3. Go to orders frontend directory and execute: `./deploy.sh v1` - it's needed to pass here some version.
-4. If everything is fine, then open browser at: localhost:80 and test installation.
-
-## 9. Install Linkerd on minikube
+## 8. Install Linkerd on Minikube
 1. [Installation](https://linkerd.io/2.13/getting-started/)
-2. [Install linkerd viz extension](https://linkerd.io/2.13/getting-started/#step-5-explore-linkerd)
+2. [Install Linkerd Viz Extension](https://linkerd.io/2.13/getting-started/#step-5-explore-linkerd)
 3. Start dashboard: `linkerd viz dashboard &`
+
+## 9. (OPTIONAL STEP) Deploy Microservices Workshop to Minikube
+1. Go to the `deployments` project and execute: `./deploy-all.sh`. This will install PostgreSQL, MongoDB, Kafka, Grafana, Prometheus, etc. - everything that is needed before we deploy every microservice.
+2. Go to every microservice project and execute: `./deploy.sh` **WARNING** it's tested only on macOS, maybe you will need small adjustments for your OS. Check the next point for deploying the frontend.
+3. Go to the `orders-frontend` project and execute: `./deploy.sh v1` - you need to pass a version here.
+4. If everything is fine, then open a browser at: localhost:80 and test the installation.
